@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonic Clock - Marc</title>
+    <style>
+    /* 1. IMPORTANDO A FONTE SEGA */
+    @font-face {
+      font-family: 'SegaFont';
+      src: url('NiseSegaSonic.TTF');
+    }
+    
+    body {
+      background-color: #000;
+      color: white;
+      font-family: 'SegaFont', Sans-Serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      overflow: hidden;
+      padding: 10px 0 20px 0;
+      box-sizing: border-box;
+    }
+    
+    /* 2. TOPO: Data e Botão na mesma altura */
+    .topo {
+      width: 92%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      letter-spacing: 1px;
+    }
+    
+    #data-texto {
+      font-size: 16px;
+      text-align: left;
+      line-height: 1.2;
+    }
+    
+    .btn-musica {
+      cursor: pointer;
+      border: 2px solid #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    /* 3. MEIO: SONIC E RELÓGIO */
+    .sonic-container {
+      width: 100%;
+      height: 55vh;
+      background: url('Sonic.png') no-repeat center;
+      background-size: contain;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    
+    .relogio-digital {
+      font-size: 3rem;
+      text-shadow: 0 0 15px #0056b3, 0 0 5px #fff;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      /* --- CONSERTO PARA O RELÓGIO NÃO "SAMBAR" --- */
+      font-variant-numeric: tabular-nums; /* Força números com largura igual */
+      display: inline-block;
+      white-space: nowrap;
+      min-width: 300px; /* Garante um espaço fixo para o texto não vibrar */
+    }
+    
+    /* 4. RODAPÉ */
+    .footer {
+      font-size: 1.2rem;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    </style>
+</head>
+<body>
+
+    <div class="topo">
+        <div id="data-texto">00/00<br>DIA</div>
+        <div class="btn-musica" onclick="playMusica()">MUSIC<br>ON/OFF</div>
+    </div>
+        
+    <div class="sonic-container">
+        <div id="hora-texto" class="relogio-digital">00:00:00</div>
+    </div>
+        
+    <div class="footer">
+        SONIC CLOCK!<br>
+        MARC THE HEDGEHOG
+    </div>
+          
+    <audio id="meuSom" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+            
+    <script>
+        function atualizarRelogio() {
+            const agora = new Date();
+            
+            const h = String(agora.getHours()).padStart(2, '0');
+            const m = String(agora.getMinutes()).padStart(2, '0');
+            const s = String(agora.getSeconds()).padStart(2, '0');
+            document.getElementById('hora-texto').innerText = h + ":" + m + ":" + s;
+            
+            const dias = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
+            const dia = String(agora.getDate()).padStart(2, '0');
+            const mes = String(agora.getMonth() + 1).padStart(2, '0');
+            const semana = dias[agora.getDay()];
+            document.getElementById('data-texto').innerHTML = dia + "/" + mes + "<br>" + semana;
+        }
+              
+        setInterval(atualizarRelogio, 1000);
+        atualizarRelogio();
+        
+        const player = document.getElementById('meuSom');
+        function playMusica() {
+            if (player.paused) {
+                player.play().catch(e => console.log("Erro ao tocar: ", e));
+            } else {
+                player.pause();
+            }
+        }
+    </script>
+</body>
+</html>
